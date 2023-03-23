@@ -1,8 +1,8 @@
 package com.example.travelagency.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.Collection;
-import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -16,10 +16,10 @@ public class Travel {
     private String name;
     @Basic
     @Column(name = "start_date", nullable = false)
-    private Date startDate;
+    private Object startDate;
     @Basic
     @Column(name = "end_date", nullable = false)
-    private Date endDate;
+    private Object endDate;
     @Basic
     @Column(name = "description", nullable = true, length = 1000)
     private String description;
@@ -51,6 +51,22 @@ public class Travel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Object getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Object startDate) {
+        this.startDate = startDate;
+    }
+
+    public Object getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Object endDate) {
+        this.endDate = endDate;
     }
 
     public String getDescription() {

@@ -1,6 +1,7 @@
 package com.example.travelagency.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.Collection;
 import java.util.Objects;
 
@@ -11,16 +12,16 @@ public class Attraction {
     @Column(name = "id", nullable = false)
     private Long id;
     @Basic
-    @Column(name = "name", nullable = false, length = 255)
+    @Column(name = "name", nullable = false)
     private String name;
     @Basic
-    @Column(name = "season", nullable = false, length = 255)
+    @Column(name = "season", nullable = false)
     private String season;
     @Basic
-    @Column(name = "description", nullable = true, length = -1)
+    @Column(name = "description", length = -1)
     private String description;
     @Basic
-    @Column(name = "address", nullable = false, length = 255)
+    @Column(name = "address", nullable = false)
     private String address;
     @Basic
     @Column(name = "koszt", nullable = false)
@@ -46,37 +47,7 @@ public class Attraction {
         this.name = name;
     }
 
-    public String getSeason() {
-        return season;
-    }
 
-    public void setSeason(String season) {
-        this.season = season;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Long getKoszt() {
-        return koszt;
-    }
-
-    public void setKoszt(Long koszt) {
-        this.koszt = koszt;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -91,19 +62,5 @@ public class Attraction {
         return Objects.hash(id, name, season, description, address, koszt);
     }
 
-    public Collection<AttractionTravel> getAttractionTravelsById() {
-        return attractionTravelsById;
-    }
 
-    public void setAttractionTravelsById(Collection<AttractionTravel> attractionTravelsById) {
-        this.attractionTravelsById = attractionTravelsById;
-    }
-
-    public Collection<GuideAttraction> getGuideAttractionsById() {
-        return guideAttractionsById;
-    }
-
-    public void setGuideAttractionsById(Collection<GuideAttraction> guideAttractionsById) {
-        this.guideAttractionsById = guideAttractionsById;
-    }
 }

@@ -1,16 +1,17 @@
 package com.example.travelagency.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
 @Entity
 @Table(name = "accommodation_travel", schema = "public", catalog = "database")
 public class AccommodationTravel {
     @Basic
-    @Column(name = "accommodation_id", nullable = false, insertable = false, updatable = false)
+    @Column(name = "accommodation_id", nullable = false, insertable=false, updatable=false)
     private Long accommodationId;
     @Basic
-    @Column(name = "travel_travel_id", nullable = false, insertable = false, updatable = false)
+    @Column(name = "travel_travel_id", nullable = false, insertable=false, updatable=false)
     private Long travelTravelId;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -23,21 +24,6 @@ public class AccommodationTravel {
     @JoinColumn(name = "travel_travel_id", referencedColumnName = "travel_id", nullable = false)
     private Travel travelByTravelTravelId;
 
-    public Long getAccommodationId() {
-        return accommodationId;
-    }
-
-    public void setAccommodationId(Long accommodationId) {
-        this.accommodationId = accommodationId;
-    }
-
-    public Long getTravelTravelId() {
-        return travelTravelId;
-    }
-
-    public void setTravelTravelId(Long travelTravelId) {
-        this.travelTravelId = travelTravelId;
-    }
 
     public Long getId() {
         return id;
@@ -60,19 +46,5 @@ public class AccommodationTravel {
         return Objects.hash(accommodationId, travelTravelId, id);
     }
 
-    public Accommodation getAccommodationByAccommodationId() {
-        return accommodationByAccommodationId;
-    }
 
-    public void setAccommodationByAccommodationId(Accommodation accommodationByAccommodationId) {
-        this.accommodationByAccommodationId = accommodationByAccommodationId;
-    }
-
-    public Travel getTravelByTravelTravelId() {
-        return travelByTravelTravelId;
-    }
-
-    public void setTravelByTravelTravelId(Travel travelByTravelTravelId) {
-        this.travelByTravelTravelId = travelByTravelTravelId;
-    }
 }

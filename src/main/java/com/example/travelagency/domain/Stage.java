@@ -1,6 +1,7 @@
 package com.example.travelagency.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -19,15 +20,15 @@ public class Stage {
     private String endPoint;
     @Basic
     @Column(name = "price", nullable = false)
-    private Long price;
+    private Date price;
     @Basic
     @Column(name = "start_date", nullable = false)
     private Date startDate;
     @Basic
     @Column(name = "end_date", nullable = false)
-    private Date endDate;
+    private Object endDate;
     @Basic
-    @Column(name = "transport_id", nullable = true, insertable = false, updatable = false)
+    @Column(name = "transport_id", nullable = true, insertable=false, updatable=false)
     private Long transportId;
     @ManyToOne
     @JoinColumn(name = "transport_id", referencedColumnName = "id")
@@ -35,45 +36,7 @@ public class Stage {
     @OneToMany(mappedBy = "stageByStageId")
     private Collection<TravelStage> travelStagesById;
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getStartPoint() {
-        return startPoint;
-    }
-
-    public void setStartPoint(String startPoint) {
-        this.startPoint = startPoint;
-    }
-
-    public String getEndPoint() {
-        return endPoint;
-    }
-
-    public void setEndPoint(String endPoint) {
-        this.endPoint = endPoint;
-    }
-
-    public Long getPrice() {
-        return price;
-    }
-
-    public void setPrice(Long price) {
-        this.price = price;
-    }
-
-    public Long getTransportId() {
-        return transportId;
-    }
-
-    public void setTransportId(Long transportId) {
-        this.transportId = transportId;
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,16 +1,17 @@
 package com.example.travelagency.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
 @Entity
 @Table(name = "transport_company_transport", schema = "public", catalog = "database")
 public class TransportCompanyTransport {
     @Basic
-    @Column(name = "transport_company_id", nullable = false, insertable = false, updatable = false)
+    @Column(name = "transport_company_id", nullable = false, insertable=false, updatable=false)
     private Long transportCompanyId;
     @Basic
-    @Column(name = "transport_id", nullable = false, insertable = false, updatable = false)
+    @Column(name = "transport_id", nullable = false, insertable=false, updatable=false)
     private Long transportId;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

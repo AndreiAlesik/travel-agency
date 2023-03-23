@@ -1,6 +1,7 @@
 package com.example.travelagency.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.Collection;
 import java.util.Objects;
 

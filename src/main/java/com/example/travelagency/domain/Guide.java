@@ -1,6 +1,7 @@
 package com.example.travelagency.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.Collection;
 import java.util.Objects;
 
@@ -11,16 +12,16 @@ public class Guide {
     @Column(name = "id", nullable = false)
     private Long id;
     @Basic
-    @Column(name = "name", nullable = false, length = 255)
+    @Column(name = "name", nullable = false)
     private String name;
     @Basic
-    @Column(name = "surename", nullable = false, length = 255)
+    @Column(name = "surename", nullable = false)
     private String surename;
     @Basic
-    @Column(name = "address", nullable = false, length = 255)
+    @Column(name = "address", nullable = false)
     private String address;
     @Basic
-    @Column(name = "phone_number", nullable = false, length = 12)
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
     @OneToMany(mappedBy = "guideByGuideId")
     private Collection<GuideAttraction> guideAttractionsById;

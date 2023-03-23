@@ -1,22 +1,22 @@
 package com.example.travelagency.domain;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
 @Entity
 @Table(name = "attraction_travel", schema = "public", catalog = "database")
 public class AttractionTravel {
+    @Basic
+    @Column(name = "attraction_id", nullable = false, insertable=false, updatable=false)
+    private Long attractionId;
+    @Basic
+    @Column(name = "travel_travel_id", nullable = false, insertable=false, updatable=false)
+    private Long travelTravelId;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
-
-    @Column(name = "attraction_id", nullable = false, insertable = false, updatable = false)
-    private Long attractionId;
-
-    @Column(name = "travel_travel_id", nullable = false, insertable = false, updatable = false)
-    private Long travelTravelId;
-
     @ManyToOne
     @JoinColumn(name = "attraction_id", referencedColumnName = "id", nullable = false)
     private Attraction attractionByAttractionId;

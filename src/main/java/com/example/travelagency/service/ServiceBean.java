@@ -2,10 +2,11 @@ package com.example.travelagency.service;
 
 import com.example.travelagency.domain.Customer;
 import com.example.travelagency.repository.Repository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.EntityNotFoundException;
+
 import java.util.List;
 
 
