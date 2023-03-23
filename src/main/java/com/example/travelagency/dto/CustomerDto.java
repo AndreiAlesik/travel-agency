@@ -1,6 +1,8 @@
 package com.example.travelagency.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +16,8 @@ import java.sql.Date;
 @AllArgsConstructor
 public class CustomerDto {
 
+    @Valid
+    @NotNull
     @Schema(description = "Name of an customer.", example = "Billy", required = true)
     private String name;
 

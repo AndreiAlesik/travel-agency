@@ -10,5 +10,6 @@ public interface Service {
     List<Customer> getAll();
 
     Customer updateById(Integer id, Customer customer);
+
 }
 
