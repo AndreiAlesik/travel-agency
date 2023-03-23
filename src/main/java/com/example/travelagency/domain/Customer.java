@@ -33,6 +33,8 @@ public class Customer {
     @OneToMany(mappedBy = "customerByCustomerId")
     private Collection<TravelCustomer> travelCustomersById;
 
+    private Boolean isDeleted=Boolean.FALSE;
+
     public Long getId() {
         return id;
     }
