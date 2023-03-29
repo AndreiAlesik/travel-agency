@@ -11,5 +11,9 @@ public interface Service {
 
     Customer updateById(Integer id, Customer customer);
 
+    Customer removeById(Integer id);
+
+    Customer getCustomerGetById(Integer id);
+
 }
 

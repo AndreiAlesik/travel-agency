@@ -2,6 +2,7 @@ package com.example.travelagency.web;
 
 import com.example.travelagency.domain.Customer;
 import com.example.travelagency.dto.CustomerDto;
+import com.example.travelagency.dto.CustomerResponseGet;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -19,5 +20,14 @@ public interface CustomerController {
             @ApiResponse(responseCode = "200", description = "Successful."),
             @ApiResponse(responseCode = "404", description = "NOT FOUND. Specified customer request not found.")})
     void updateCustomer(Integer id, CustomerDto customerDto);
+
+
+    @Operation(summary = "This is endpoint to get certain customer info.", description = "Create request to get certain customer  info.", tags = {"Customer"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful."),
+            @ApiResponse(responseCode = "404", description = "NOT FOUND. Specified customer request not found.")})
+    CustomerResponseGet getCustomer(Integer id);
+
+    void removeCustomer(Integer id);
 }
 
