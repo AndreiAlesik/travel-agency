@@ -20,9 +20,9 @@ public class AccommodationRequestDTO {
     private String address;
 
     @Schema(description = "Price.", example = "1000", required = true)
-    private Long price;
+    private Integer price;
 
     @Schema(description = "Sleeping Places number.", example = "100", required = true)
-    private Long sleepingPlacesNumber;
+    private Integer sleepingPlacesNumber;
 
 }
