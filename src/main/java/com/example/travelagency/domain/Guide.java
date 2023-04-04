@@ -26,7 +26,7 @@ public class Guide {
     private String name;
 
     @Column(name = "surename", nullable = false)
-    private String surename;
+    private String surname;
 
     @Column(name = "address", nullable = false)
     private String address;

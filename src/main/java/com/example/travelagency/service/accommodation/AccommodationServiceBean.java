@@ -26,20 +26,20 @@ public class AccommodationServiceBean implements AccommodationService{
     private final AccommodationMapper accommodationMapper;
 
     public AccommodationResponseDTO create(AccommodationRequestDTO accommodationRequestDTO) {
-        log.debug("Service ==> create() - start: accommodationRequestDTO = {}", accommodationRequestDTO);
+        log.debug("AccommodationService ==> create() - start: accommodationRequestDTO = {}", accommodationRequestDTO);
         var accommodationCreated =
                 accommodationsRepository.save(
                         accommodationMapper.requestDtoToAccommodation(accommodationRequestDTO));
         var accommodationResponse = accommodationMapper.accommodationToResponseDto(accommodationCreated);
-        log.debug("Service ==> create() - end: accommodationResponse = {}", accommodationResponse);
+        log.debug("AccommodationService ==> create() - end: accommodationResponse = {}", accommodationResponse);
         return accommodationResponse;
     }
 
     public List<Accommodation> getAll() {
-        log.debug("Service ==> getAll() - start: ");
+        log.debug("AccommodationService ==> getAll() - start: ");
         try {
             var allAccommodations = accommodationsRepository.findAll();
-            log.debug("Service ==> getAll() - end: ");
+            log.debug("AccommodationService ==> getAll() - end: ");
             return allAccommodations;
         } catch (NullPointerException e) {
             throw new ResourceNotFoundException();
@@ -49,14 +49,14 @@ public class AccommodationServiceBean implements AccommodationService{
     }
 
     public void delete(Integer id) {
-        log.debug("Service ==> removeById() - start: id = {}", id);
+        log.debug("AccommodationService ==> removeById() - start: id = {}", id);
         accommodationsRepository.deleteById(id);
-        log.debug("Service ==> removeById() - end: id = {}", id);
+        log.debug("AccommodationService ==> removeById() - end: id = {}", id);
     }
 
 
     public AccommodationResponseDTO updateById(Integer id, AccommodationRequestDTO accommodationRequestDTO) {
-        log.debug("Service ==> updateById() - start: id = {}, accommodationRequestDTO = {}", id, accommodationRequestDTO);
+        log.debug("AccommodationService ==> updateById() - start: id = {}, accommodationRequestDTO = {}", id, accommodationRequestDTO);
         var accommodationToUpdate = accommodationMapper.requestDtoToAccommodation(accommodationRequestDTO);
         try {
             return accommodationsRepository.findById(id)
@@ -65,10 +65,10 @@ public class AccommodationServiceBean implements AccommodationService{
                         entity.setAccommodationStandard(accommodationToUpdate.getAccommodationStandard());
                         entity.setPrice(accommodationToUpdate.getPrice());
                         entity.setAddress(accommodationToUpdate.getAddress());
-                        log.debug("Service ==> updateById() - end: accommodationToUpdate = {}", entity);
+                        log.debug("AccommodationService ==> updateById() - end: accommodationToUpdate = {}", entity);
                         return accommodationMapper.accommodationToResponseDto(accommodationsRepository.save(entity));
                     })
-                    .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
+                    .orElseThrow(() -> new EntityNotFoundException("Accommodation not found with id = " + id));
         } catch (IllegalArgumentException e) {
             throw new WrongArgumentException();
         } catch (DataAccessException e) {
@@ -77,7 +77,7 @@ public class AccommodationServiceBean implements AccommodationService{
     }
 
     public AccommodationResponseDTO getById(Integer id) {
-        log.debug("Service ==> getById() - start: id = {}", id);
+        log.debug("AccommodationService ==> getById() - start: id = {}", id);
         if (id == null) {
             throw new WrongArgumentException();
         }
@@ -85,7 +85,7 @@ public class AccommodationServiceBean implements AccommodationService{
                 // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
                 .orElseThrow(ResourceNotFoundException::new);
         var accommodationResponse = accommodationMapper.accommodationToResponseDto(accommodation);
-        log.debug("Service ==> getById() - end: employee = {}", accommodationResponse);
+        log.debug("AccommodationService ==> getById() - end: employee = {}", accommodationResponse);
         return accommodationResponse;
     }
 
