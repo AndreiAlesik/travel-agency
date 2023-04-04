@@ -1,16 +1,16 @@
-package com.example.travelagency.dto;
+package com.example.travelagency.dto.accommodation;
 
+
+import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
-public class AccommodationResponseDTO {
+public class AccommodationRequestDTO {
+
     @Schema(description = "Name of an accommodation.", example = "Hostel", required = true)
     private String name;
 
@@ -20,8 +20,9 @@ public class AccommodationResponseDTO {
     private String address;
 
     @Schema(description = "Price.", example = "1000", required = true)
-    private Long price;
+    private Integer price;
 
     @Schema(description = "Sleeping Places number.", example = "100", required = true)
-    private Long sleepingPlacesNumber;
+    private Integer sleepingPlacesNumber;
+
 }

@@ -1,8 +1,8 @@
 package com.example.travelagency.util.mapstruct;
 
 import com.example.travelagency.domain.Accommodation;
-import com.example.travelagency.dto.AccommodationRequestDTO;
-import com.example.travelagency.dto.AccommodationResponseDTO;
+import com.example.travelagency.dto.accommodation.AccommodationRequestDTO;
+import com.example.travelagency.dto.accommodation.AccommodationResponseDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

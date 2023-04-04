@@ -1,16 +1,15 @@
-package com.example.travelagency.dto;
+package com.example.travelagency.dto.attraction;
 
+
+import io.swagger.annotations.ApiModel;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
-public class AttractionResponseDTO {
+public class AttractionRequestDTO {
     @Schema(description = "Name of an attraction.", example = "Name", required = true)
     private String name;
     @Schema(description = "Address of an attraction.", example = "address", required = true)
@@ -21,4 +20,5 @@ public class AttractionResponseDTO {
     private String season;
     @Schema(description = "Price of an attraction.", example = "price", required = true)
     private Integer price;
+
 }

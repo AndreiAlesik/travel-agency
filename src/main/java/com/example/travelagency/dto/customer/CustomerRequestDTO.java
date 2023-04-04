@@ -1,4 +1,4 @@
-package com.example.travelagency.dto;
+package com.example.travelagency.dto.customer;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -14,15 +14,15 @@ import java.sql.Date;
 @Setter
 @Builder
 @AllArgsConstructor
-public class CustomerDto {
+public class CustomerRequestDTO {
 
     @Valid
     @NotNull
     @Schema(description = "Name of an customer.", example = "Billy", required = true)
     private String name;
 
-    @Schema(description = "Surename of an customer.", example = "Smith", required = true)
-    private String surename;
+    @Schema(description = "Surname of an customer.", example = "Smith", required = true)
+    private String surname;
 
     @Schema(description = "Address of an customer.", example = "Little George St, London SW1P 3BD, Great Britain", required = true)
     private String address;

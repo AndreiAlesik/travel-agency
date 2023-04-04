@@ -1,29 +1,26 @@
-package com.example.travelagency.service;
+package com.example.travelagency.service.accommodation;
 
 import com.example.travelagency.domain.Accommodation;
-import com.example.travelagency.dto.AccommodationRequestDTO;
-import com.example.travelagency.dto.AccommodationResponseDTO;
+import com.example.travelagency.dto.accommodation.AccommodationRequestDTO;
+import com.example.travelagency.dto.accommodation.AccommodationResponseDTO;
 import com.example.travelagency.repository.AccommodationRepository;
 import com.example.travelagency.util.exceptionhandling.AccessException;
 import com.example.travelagency.util.exceptionhandling.ResourceNotFoundException;
-import com.example.travelagency.util.exceptionhandling.ResourceWasDeletedException;
 import com.example.travelagency.util.exceptionhandling.WrongArgumentException;
 import com.example.travelagency.util.mapstruct.AccommodationMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataAccessException;
 
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @Slf4j
 @AllArgsConstructor
-public class AccommodationService {
+public class AccommodationServiceBean implements AccommodationService{
 
     private final AccommodationRepository accommodationsRepository;
     private final AccommodationMapper accommodationMapper;

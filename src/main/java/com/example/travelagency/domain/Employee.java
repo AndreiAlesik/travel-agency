@@ -26,7 +26,7 @@ public class Employee {
     private String name;
 
     @Column(name = "surename", nullable = false)
-    private String surename;
+    private String surname;
 
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;

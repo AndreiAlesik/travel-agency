@@ -1,9 +1,8 @@
-package com.example.travelagency.service;
+package com.example.travelagency.service.attraction;
 
-import com.example.travelagency.domain.Accommodation;
 import com.example.travelagency.domain.Attraction;
-import com.example.travelagency.dto.AttractionRequestDTO;
-import com.example.travelagency.dto.AttractionResponseDTO;
+import com.example.travelagency.dto.attraction.AttractionRequestDTO;
+import com.example.travelagency.dto.attraction.AttractionResponseDTO;
 import com.example.travelagency.repository.AttractionRepository;
 import com.example.travelagency.util.exceptionhandling.AccessException;
 import com.example.travelagency.util.exceptionhandling.ResourceNotFoundException;
@@ -21,7 +20,7 @@ import java.util.List;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class AttractionsService {
+public class AttractionsServiceBean implements AttractionService{
 
 
     private final AttractionRepository attractionRepository;

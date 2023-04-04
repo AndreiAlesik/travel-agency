@@ -28,7 +28,7 @@ public class Customer {
     private String name;
 
     @Column(name = "surename", nullable = false)
-    private String surename;
+    private String surname;
 
     @Column(name = "address", nullable = false)
     private String address;
@@ -39,8 +39,6 @@ public class Customer {
     @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
 
-    @Column(name = "id_number", nullable = false)
-    private String idNumber;
 
     @Column(name = "is_deleted")
     private Boolean deleted;
