@@ -1,69 +1,48 @@
 package com.example.travelagency.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.*;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Objects;
+import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@Table(name = "stages")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder(toBuilder = true)
+@Getter
+@Setter
 public class Stage {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
     @Column(name = "id", nullable = false)
-    private Long id;
-    @Basic
-    @Column(name = "start_point", nullable = false, length = 255)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "start_point", nullable = false)
     private String startPoint;
-    @Basic
-    @Column(name = "end_point", nullable = false, length = 255)
+
+    @Column(name = "end_point", nullable = false)
     private String endPoint;
-    @Basic
+
     @Column(name = "price", nullable = false)
-    private Date price;
-    @Basic
+    private Long price;
+
     @Column(name = "start_date", nullable = false)
-    private Date startDate;
-    @Basic
+    private OffsetDateTime startDate;
+
     @Column(name = "end_date", nullable = false)
-    private Object endDate;
-    @Basic
-    @Column(name = "transport_id", nullable = true, insertable=false, updatable=false)
-    private Long transportId;
-    @ManyToOne
-    @JoinColumn(name = "transport_id", referencedColumnName = "id")
-    private Transport transportByTransportId;
-    @OneToMany(mappedBy = "stageByStageId")
-    private Collection<TravelStage> travelStagesById;
+    private OffsetDateTime endDate;
 
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name = "stage_id")
+    private Set<Transport> transports = new HashSet<>();
 
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "stages")
+    @JsonIgnore
+    private Set<Travel> travels=new HashSet<>();
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Stage stage = (Stage) o;
-        return Objects.equals(id, stage.id) && Objects.equals(startPoint, stage.startPoint) && Objects.equals(endPoint, stage.endPoint) && Objects.equals(price, stage.price) && Objects.equals(startDate, stage.startDate) && Objects.equals(endDate, stage.endDate) && Objects.equals(transportId, stage.transportId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, startPoint, endPoint, price, startDate, endDate, transportId);
-    }
-
-    public Transport getTransportByTransportId() {
-        return transportByTransportId;
-    }
-
-    public void setTransportByTransportId(Transport transportByTransportId) {
-        this.transportByTransportId = transportByTransportId;
-    }
-
-    public Collection<TravelStage> getTravelStagesById() {
-        return travelStagesById;
-    }
-
-    public void setTravelStagesById(Collection<TravelStage> travelStagesById) {
-        this.travelStagesById = travelStagesById;
-    }
 }

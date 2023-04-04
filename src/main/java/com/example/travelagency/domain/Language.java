@@ -1,66 +1,39 @@
 package com.example.travelagency.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.*;
 
-import java.util.Collection;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
+
+@Data
 @Entity
+@Table(name = "languages")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder(toBuilder = true)
+@Getter
+@Setter
 public class Language {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "code", nullable = false, length = 5)
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "code", nullable = false)
     private String code;
-    @Basic
-    @Column(name = "name", nullable = false, length = 255)
+
+    @Column(name = "name", nullable = false)
     private String name;
-    @OneToMany(mappedBy = "languageByLanguageCode")
-    private Collection<GuideLanguage> guideLanguagesByCode;
-    @OneToMany(mappedBy = "languageByLanguageCode")
-    private Collection<LanguageEmployee> languageEmployeesByCode;
 
-    public String getCode() {
-        return code;
-    }
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ToString.Exclude
+    private Set<Employee> employees=new HashSet<>();
 
-    public void setCode(String code) {
-        this.code = code;
-    }
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ToString.Exclude
+    private Set<Guide> guides=new HashSet<>();
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Language language = (Language) o;
-        return Objects.equals(code, language.code) && Objects.equals(name, language.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(code, name);
-    }
-
-    public Collection<GuideLanguage> getGuideLanguagesByCode() {
-        return guideLanguagesByCode;
-    }
-
-    public void setGuideLanguagesByCode(Collection<GuideLanguage> guideLanguagesByCode) {
-        this.guideLanguagesByCode = guideLanguagesByCode;
-    }
-
-    public Collection<LanguageEmployee> getLanguageEmployeesByCode() {
-        return languageEmployeesByCode;
-    }
-
-    public void setLanguageEmployeesByCode(Collection<LanguageEmployee> languageEmployeesByCode) {
-        this.languageEmployeesByCode = languageEmployeesByCode;
-    }
 }

@@ -1,7 +1,7 @@
 package com.example.travelagency.service;
 
 import com.example.travelagency.domain.Customer;
-import com.example.travelagency.repository.Repository;
+import com.example.travelagency.repository.CustomerRepository;
 import com.example.travelagency.util.exceptionhandling.ResourceWasDeletedException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 @org.springframework.stereotype.Service
 public class ServiceBean implements Service {
-    private final Repository repository;
+    private final CustomerRepository repository;
 
     @Override
     public Customer create(Customer customerEntity) {
@@ -27,7 +27,7 @@ public class ServiceBean implements Service {
     @Override
     public List<Customer> getAll() {
         log.info("start");
-        return repository.findAllByIsDeletedIsFalse();
+        return repository.findAllByDeletedIsFalse();
     }
 
     @Override
@@ -48,13 +48,13 @@ public class ServiceBean implements Service {
     public Customer removeById(Integer id) {
         var customer = repository.findById(id)
                 .orElseThrow(ResourceWasDeletedException::new);
-        customer.setIsDeleted(true);
+        customer.setDeleted(true);
         repository.save(customer);
         return customer;
     }
 
     @Override
     public Customer getCustomerGetById(Integer id) {
-        return repository.getCustomerByIdAndIsDeletedIsFalse(id);
+        return repository.getCustomerByIdAndDeletedIsFalse(id);
     }
 }

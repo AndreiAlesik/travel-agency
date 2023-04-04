@@ -1,122 +1,52 @@
 package com.example.travelagency.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
-import java.sql.Date;
-import java.util.Collection;
-import java.util.Objects;
+import lombok.*;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@Table(name = "customers")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder(toBuilder = true)
+@Getter
+@Setter
 public class Customer {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
     @Column(name = "id", nullable = false)
-    private Long id;
-    @Basic
-    @Column(name = "personal_number", nullable = false, length = 255)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = "personal_number", nullable = false)
     private String personalNumber;
-    @Basic
-    @Column(name = "name", nullable = false, length = 255)
+
+    @Column(name = "name", nullable = false)
     private String name;
-    @Basic
-    @Column(name = "surename", nullable = false, length = 255)
+
+    @Column(name = "surename", nullable = false)
     private String surename;
-    @Basic
-    @Column(name = "address", nullable = false, length = 255)
+
+    @Column(name = "address", nullable = false)
     private String address;
-    @Basic
-    @Column(name = "phone_number", nullable = false, length = 12)
+
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
-    @Basic
+
     @Column(name = "date_of_birth", nullable = false)
-    private Date dateOfBirth;
-    @OneToMany(mappedBy = "customerByCustomerId")
-    private Collection<TravelCustomer> travelCustomersById;
+    private LocalDate dateOfBirth;
 
-    private Boolean isDeleted=Boolean.FALSE;
+    @Column(name = "id_number", nullable = false)
+    private String idNumber;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "is_deleted")
+    private Boolean deleted;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "customers")
+    @JsonIgnore
+    private Set<Travel> travels=new HashSet<>();
 
-    public String getPersonalNumber() {
-        return personalNumber;
-    }
-
-    public void setPersonalNumber(String personalNumber) {
-        this.personalNumber = personalNumber;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurename() {
-        return surename;
-    }
-
-    public void setSurename(String surename) {
-        this.surename = surename;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public Boolean getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Customer customer = (Customer) o;
-        return Objects.equals(id, customer.id) && Objects.equals(personalNumber, customer.personalNumber) && Objects.equals(name, customer.name) && Objects.equals(surename, customer.surename) && Objects.equals(address, customer.address) && Objects.equals(phoneNumber, customer.phoneNumber) && Objects.equals(dateOfBirth, customer.dateOfBirth);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, personalNumber, name, surename, address, phoneNumber, dateOfBirth);
-    }
-
-    public Collection<TravelCustomer> getTravelCustomersById() {
-        return travelCustomersById;
-    }
-
-    public void setTravelCustomersById(Collection<TravelCustomer> travelCustomersById) {
-        this.travelCustomersById = travelCustomersById;
-    }
 }

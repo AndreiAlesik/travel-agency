@@ -1,71 +1,44 @@
 package com.example.travelagency.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.Collection;
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
+
 
 @Entity
+@Table(name = "accommodations")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder(toBuilder = true)
+@Getter
+@Setter
 public class Accommodation {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
     @Column(name = "id", nullable = false)
-    private Long id;
-    @Basic
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     @Column(name = "name", nullable = false)
     private String name;
-    @Basic
+
     @Column(name = "price")
-    private Long price;
-    @Basic
+    private Integer price;
+
     @Column(name = "sleeping_places_number")
-    private Long sleepingPlacesNumber;
-    @Basic
-    @Column(name = "standard_zakwaterowania", nullable = false)
-    private String standardZakwaterowania;
-    @Basic
-    @Column(name = "adres", nullable = false)
-    private String adres;
-    @OneToMany(mappedBy = "accommodationByAccommodationId")
-    private Collection<AccommodationTravel> accommodationTravelsById;
+    private Integer sleepingPlacesNumber;
 
+    @Column(name = "accommodation_standard", nullable = false)
+    private String accommodationStandard;
 
+    @Column(name = "address", nullable = false)
+    private String address;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Accommodation that = (Accommodation) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(price, that.price) && Objects.equals(sleepingPlacesNumber, that.sleepingPlacesNumber) && Objects.equals(standardZakwaterowania, that.standardZakwaterowania) && Objects.equals(adres, that.adres);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, price, sleepingPlacesNumber, standardZakwaterowania, adres);
-    }
-
-
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "accommodations")
+    @JsonIgnore
+    private Set<Travel> travels=new HashSet<>();
 
 }
