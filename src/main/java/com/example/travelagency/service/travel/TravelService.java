@@ -1,20 +1,20 @@
 package com.example.travelagency.service.travel;
 
+
 import com.example.travelagency.domain.Travel;
-import com.example.travelagency.dto.travel.TravelRequestDTO;
 import com.example.travelagency.dto.travel.TravelResponseDTO;
 
 
 import java.util.List;
 
 public interface TravelService {
-    TravelResponseDTO create(TravelRequestDTO travelRequestDTO);
+    Travel create(Travel travel);
 
     List<Travel> getAll();
 
     void delete(Integer id);
 
-    TravelResponseDTO updateById(Integer id, TravelRequestDTO travelRequestDTO);
+    Travel updateById(Integer id, Travel travel);
 
-    TravelResponseDTO getById(Integer id);
+    Travel getById(Integer id);
 }

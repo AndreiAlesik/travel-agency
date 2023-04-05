@@ -12,13 +12,8 @@ import org.springframework.dao.DataAccessException;
 import java.util.List;
 
 public interface TransportCompanyService {
-    TransportCompanyResponseDTO create(TransportCompanyRequestDTO transportCompanyRequestDTO);
-
+    TransportCompany create(TransportCompany transportCompany);
     List<TransportCompany> getAll();
-
     void delete(Integer id);
-
-    TransportCompanyResponseDTO updateById(Integer id, TransportCompanyRequestDTO transportCompanyRequestDTO);
-
-    TransportCompanyResponseDTO getById(Integer id);
+    TransportCompany updateById(Integer id, TransportCompany transportCompanyToUpdate);
 }

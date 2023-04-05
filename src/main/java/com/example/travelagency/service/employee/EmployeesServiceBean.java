@@ -1,13 +1,10 @@
 package com.example.travelagency.service.employee;
 
 import com.example.travelagency.domain.Employee;
-import com.example.travelagency.dto.employee.EmployeeRequestDTO;
-import com.example.travelagency.dto.employee.EmployeeResponseDTO;
 import com.example.travelagency.repository.EmployeeRepository;
 import com.example.travelagency.util.exceptionhandling.AccessException;
 import com.example.travelagency.util.exceptionhandling.ResourceNotFoundException;
 import com.example.travelagency.util.exceptionhandling.WrongArgumentException;
-import com.example.travelagency.util.mapstruct.EmployeeMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,16 +20,13 @@ import java.util.List;
 public class EmployeesServiceBean implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
-    private final EmployeeMapper employeeMapper;
 
-    public EmployeeResponseDTO create(EmployeeRequestDTO employeeRequestDTO) {
-        log.debug("EmployeesServiceBean ==> create() - start: attractionRequestDTO = {}", employeeRequestDTO);
+    public Employee create(Employee employee) {
+        log.debug("EmployeesServiceBean ==> create() - start: attractionRequestDTO = {}", employee);
         var employeeCreated =
-                employeeRepository.save(
-                        employeeMapper.requestDTOToEmployee(employeeRequestDTO));
-        var employeeResponseDTO = employeeMapper.employeeToResponseDTO(employeeCreated);
-        log.debug("EmployeesServiceBean ==> create() - end: attractionResponse = {}", employeeResponseDTO);
-        return employeeResponseDTO;
+                employeeRepository.save(employee);
+        log.debug("EmployeesServiceBean ==> create() - end: attractionResponse = {}", employeeCreated);
+        return employeeCreated;
     }
 
     public List<Employee> getAll() {
@@ -55,10 +49,9 @@ public class EmployeesServiceBean implements EmployeeService {
     }
 
 
-    public EmployeeResponseDTO updateById(Integer id, EmployeeRequestDTO employeeRequestDTO) {
+    public Employee updateById(Integer id, Employee employeeToUpdate) {
         log.debug("EmployeesServiceBean ==> updateById() - start: id = {}, employeeRequestDTO = {}",
-                id, employeeRequestDTO);
-        var employeeToUpdate = employeeMapper.requestDTOToEmployee(employeeRequestDTO);
+                id, employeeToUpdate);
         try {
             return employeeRepository.findById(id)
                     .map(entity -> {
@@ -67,7 +60,7 @@ public class EmployeesServiceBean implements EmployeeService {
                         entity.setPhoneNumber(employeeToUpdate.getPhoneNumber());
                         entity.setAddress(employeeToUpdate.getAddress());
                         log.debug("EmployeesServiceBean ==> updateById() - end: employeeToUpdate = {}", entity);
-                        return employeeMapper.employeeToResponseDTO(employeeRepository.save(entity));
+                        return employeeRepository.save(entity);
                     })
                     .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
         } catch (IllegalArgumentException e) {
@@ -77,7 +70,7 @@ public class EmployeesServiceBean implements EmployeeService {
         }
     }
 
-    public EmployeeResponseDTO getById(Integer id) {
+    public Employee getById(Integer id) {
         log.debug("EmployeesServiceBean ==> getById() - start: id = {}", id);
         if (id == null) {
             throw new WrongArgumentException();
@@ -85,8 +78,7 @@ public class EmployeesServiceBean implements EmployeeService {
         var employee = employeeRepository.findById(id)
                 // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
                 .orElseThrow(ResourceNotFoundException::new);
-        var employeeResponseDTO = employeeMapper.employeeToResponseDTO(employee);
-        log.debug("EmployeesServiceBean ==> getById() - end: employee = {}", employeeResponseDTO);
-        return employeeResponseDTO;
+        log.debug("EmployeesServiceBean ==> getById() - end: employee = {}", employee);
+        return employee;
     }
 }

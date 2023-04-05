@@ -7,14 +7,14 @@ import com.example.travelagency.dto.customer.CustomerResponseDTO;
 import java.util.List;
 
 public interface CustomerService {
-    CustomerResponseDTO create(CustomerRequestDTO customerRequestDTO);
+    Customer create(Customer customer);
 
     List<Customer> getAll();
 
     void delete(Integer id);
 
 
-    CustomerResponseDTO updateById(Integer id, CustomerRequestDTO customerRequestDTO);
+    Customer updateById(Integer id, Customer customer);
 
-    CustomerResponseDTO getById(Integer id);
+    Customer getById(Integer id);
 }

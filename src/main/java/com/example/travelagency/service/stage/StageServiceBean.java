@@ -3,7 +3,7 @@ package com.example.travelagency.service.stage;
 
 import com.example.travelagency.domain.Stage;
 import com.example.travelagency.dto.stage.StageRequestDTO;
-import com.example.travelagency.dto.stage.StageResponseDTO;
+import com.example.travelagency.domain.Stage;
 import com.example.travelagency.repository.StageRepository;
 import com.example.travelagency.util.exceptionhandling.AccessException;
 import com.example.travelagency.util.exceptionhandling.ResourceNotFoundException;
@@ -25,14 +25,13 @@ public class StageServiceBean {
 
     private final StageMapper stageMapper;
     private final StageRepository stageRepository;
-    public StageResponseDTO create(StageRequestDTO stageRequestDTO) {
+    public Stage create(StageRequestDTO stageRequestDTO) {
         log.debug("StageService ==> create() - start: stage = {}", stageRequestDTO);
         var stageCreated =
                 stageRepository.save(
                         stageMapper.requestDTOToStage(stageRequestDTO));
-        var stageResponseDTO = stageMapper.stageToResponseDTO(stageCreated);
-        log.debug("StageService ==> create() - end: stageResponse = {}", stageResponseDTO);
-        return stageResponseDTO;
+        log.debug("StageService ==> create() - end: stageResponse = {}", stageCreated);
+        return stageCreated;
     }
 
     public List<Stage> getAll() {
@@ -55,10 +54,10 @@ public class StageServiceBean {
     }
 
 
-    public StageResponseDTO updateById(Integer id, StageRequestDTO stageRequestDTO) {
-        log.debug("StageService ==> updateById() - start: id = {}, stageRequest = {}",
-                id, stageRequestDTO);
-        var stageToUpdate = stageMapper.requestDTOToStage(stageRequestDTO);
+    public Stage updateById(Integer id, Stage stageToUpdate) {
+        log.debug("StageService ==> updateById() - start: id = {}, stageToUpdate = {}",
+                id, stageToUpdate);
+
         try {
             return stageRepository.findById(id)
                     .map(entity -> {
@@ -68,7 +67,7 @@ public class StageServiceBean {
                         entity.setStartDate(stageToUpdate.getStartDate());
                         entity.setEndDate(stageToUpdate.getEndDate());
                         log.debug("StageService ==> updateById() - end: stageToUpdate = {}", entity);
-                        return stageMapper.stageToResponseDTO(stageRepository.save(entity));
+                        return stageRepository.save(entity);
                     })
                     .orElseThrow(() -> new EntityNotFoundException("Stage not found with id = " + id));
         } catch (IllegalArgumentException e) {
@@ -78,7 +77,7 @@ public class StageServiceBean {
         }
     }
 
-    public StageResponseDTO getById(Integer id) {
+    public Stage getById(Integer id) {
         log.debug("StageService ==> getById() - start: id = {}", id);
         if (id == null) {
             throw new WrongArgumentException();
@@ -86,8 +85,7 @@ public class StageServiceBean {
         var stage = stageRepository.findById(id)
                 // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
                 .orElseThrow(ResourceNotFoundException::new);
-        var stageResponseDTO = stageMapper.stageToResponseDTO(stage);
-        log.debug("StageService ==> getById() - end: stage = {}", stageResponseDTO);
-        return stageResponseDTO;
+        log.debug("StageService ==> getById() - end: stage = {}", stage);
+        return stage;
     }
 }

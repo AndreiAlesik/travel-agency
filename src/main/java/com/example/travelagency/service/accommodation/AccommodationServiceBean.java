@@ -1,13 +1,10 @@
 package com.example.travelagency.service.accommodation;
 
 import com.example.travelagency.domain.Accommodation;
-import com.example.travelagency.dto.accommodation.AccommodationRequestDTO;
-import com.example.travelagency.dto.accommodation.AccommodationResponseDTO;
 import com.example.travelagency.repository.AccommodationRepository;
 import com.example.travelagency.util.exceptionhandling.AccessException;
 import com.example.travelagency.util.exceptionhandling.ResourceNotFoundException;
 import com.example.travelagency.util.exceptionhandling.WrongArgumentException;
-import com.example.travelagency.util.mapstruct.AccommodationMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,16 +20,13 @@ import java.util.List;
 public class AccommodationServiceBean implements AccommodationService{
 
     private final AccommodationRepository accommodationsRepository;
-    private final AccommodationMapper accommodationMapper;
 
-    public AccommodationResponseDTO create(AccommodationRequestDTO accommodationRequestDTO) {
-        log.debug("AccommodationService ==> create() - start: accommodationRequestDTO = {}", accommodationRequestDTO);
+    public Accommodation create(Accommodation accommodation) {
+        log.debug("AccommodationService ==> create() - start: accommodation = {}", accommodation);
         var accommodationCreated =
-                accommodationsRepository.save(
-                        accommodationMapper.requestDtoToAccommodation(accommodationRequestDTO));
-        var accommodationResponse = accommodationMapper.accommodationToResponseDto(accommodationCreated);
-        log.debug("AccommodationService ==> create() - end: accommodationResponse = {}", accommodationResponse);
-        return accommodationResponse;
+                accommodationsRepository.save(accommodation);
+        log.debug("AccommodationService ==> create() - end: accommodationCreated = {}", accommodationCreated);
+        return accommodationCreated;
     }
 
     public List<Accommodation> getAll() {
@@ -55,9 +49,8 @@ public class AccommodationServiceBean implements AccommodationService{
     }
 
 
-    public AccommodationResponseDTO updateById(Integer id, AccommodationRequestDTO accommodationRequestDTO) {
-        log.debug("AccommodationService ==> updateById() - start: id = {}, accommodationRequestDTO = {}", id, accommodationRequestDTO);
-        var accommodationToUpdate = accommodationMapper.requestDtoToAccommodation(accommodationRequestDTO);
+    public Accommodation updateById(Integer id, Accommodation accommodationToUpdate) {
+        log.debug("AccommodationService ==> updateById() - start: id = {}, accommodationToUpdate = {}", id, accommodationToUpdate);
         try {
             return accommodationsRepository.findById(id)
                     .map(entity -> {
@@ -66,7 +59,7 @@ public class AccommodationServiceBean implements AccommodationService{
                         entity.setPrice(accommodationToUpdate.getPrice());
                         entity.setAddress(accommodationToUpdate.getAddress());
                         log.debug("AccommodationService ==> updateById() - end: accommodationToUpdate = {}", entity);
-                        return accommodationMapper.accommodationToResponseDto(accommodationsRepository.save(entity));
+                        return accommodationsRepository.save(entity);
                     })
                     .orElseThrow(() -> new EntityNotFoundException("Accommodation not found with id = " + id));
         } catch (IllegalArgumentException e) {
@@ -76,7 +69,7 @@ public class AccommodationServiceBean implements AccommodationService{
         }
     }
 
-    public AccommodationResponseDTO getById(Integer id) {
+    public Accommodation getById(Integer id) {
         log.debug("AccommodationService ==> getById() - start: id = {}", id);
         if (id == null) {
             throw new WrongArgumentException();
@@ -84,9 +77,8 @@ public class AccommodationServiceBean implements AccommodationService{
         var accommodation = accommodationsRepository.findById(id)
                 // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
                 .orElseThrow(ResourceNotFoundException::new);
-        var accommodationResponse = accommodationMapper.accommodationToResponseDto(accommodation);
-        log.debug("AccommodationService ==> getById() - end: employee = {}", accommodationResponse);
-        return accommodationResponse;
+        log.debug("AccommodationService ==> getById() - end: accommodation = {}", accommodation);
+        return accommodation;
     }
 
 

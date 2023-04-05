@@ -1,6 +1,7 @@
 package com.example.travelagency.service.transportcompany;
 
 import com.example.travelagency.domain.TransportCompany;
+import com.example.travelagency.domain.TransportCompany;
 import com.example.travelagency.dto.transportcompany.TransportCompanyRequestDTO;
 import com.example.travelagency.dto.transportcompany.TransportCompanyResponseDTO;
 import com.example.travelagency.repository.TransportCompanyRepository;
@@ -20,24 +21,23 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 public class TransportCompanyServiceBean implements TransportCompanyService{
-    private final TransportCompanyMapper transportCompanyMapper;
+
     private final TransportCompanyRepository transportCompanyRepository;
-    public TransportCompanyResponseDTO create(TransportCompanyRequestDTO transportCompanyRequestDTO) {
-        log.debug("TransportCompanyService ==> create() - start: transportCompany = {}", transportCompanyRequestDTO);
-        var transportCompanyCreated =
-                transportCompanyRepository.save(
-                        transportCompanyMapper.requestDTOToTransportCompany(transportCompanyRequestDTO));
-        var transportCompanyResponseDTO = transportCompanyMapper.transportCompanyToResponseDTO(transportCompanyCreated);
-        log.debug("TransportCompanyService ==> create() - end: transportCompanyResponse = {}", transportCompanyResponseDTO);
-        return transportCompanyResponseDTO;
+
+
+    public TransportCompany create(TransportCompany transportCompany) {
+        log.debug("TransportCompanyService ==> create() - start: travel = {}", transportCompany);
+        var travelCreated =transportCompanyRepository.save(transportCompany);
+        log.debug("TransportCompanyService ==> create() - end: travelResponse = {}", travelCreated);
+        return travelCreated;
     }
 
     public List<TransportCompany> getAll() {
         log.debug("TransportCompanyService ==> getAll() - start: ");
         try {
-            var transportCompanyList = transportCompanyRepository.findAll();
+            List<TransportCompany> travelList = transportCompanyRepository.findAll();
             log.debug("TransportCompanyService ==> getAll() - end: ");
-            return transportCompanyList;
+            return travelList;
         } catch (NullPointerException e) {
             throw new ResourceNotFoundException();
         } catch (DataAccessException e) {
@@ -52,10 +52,21 @@ public class TransportCompanyServiceBean implements TransportCompanyService{
     }
 
 
-    public TransportCompanyResponseDTO updateById(Integer id, TransportCompanyRequestDTO transportCompanyRequestDTO) {
-        log.debug("TransportCompanyService ==> updateById() - start: id = {}, transportCompanyRequest = {}",
-                id, transportCompanyRequestDTO);
-        var transportCompanyToUpdate = transportCompanyMapper.requestDTOToTransportCompany(transportCompanyRequestDTO);
+    public TransportCompany getById(Integer id) {
+        log.debug("TransportCompanyService ==> getById() - start: id = {}", id);
+        if (id == null) {
+            throw new WrongArgumentException();
+        }
+        var transportCompany = transportCompanyRepository.findById(id)
+                // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
+                .orElseThrow(ResourceNotFoundException::new);
+        log.debug("TransportCompanyService ==> getById() - end: transportCompany = {}", transportCompany);
+        return transportCompany;
+    }
+    public TransportCompany updateById(Integer id, TransportCompany transportCompanyToUpdate) {
+        log.debug("TransportCompanyService ==> updateById() - start: id = {}, transportCompanyToUpdate = {}",
+                id, transportCompanyToUpdate);
+
         try {
             return transportCompanyRepository.findById(id)
                     .map(entity -> {
@@ -63,7 +74,7 @@ public class TransportCompanyServiceBean implements TransportCompanyService{
                         entity.setPhoneNumber(transportCompanyToUpdate.getPhoneNumber());
                         entity.setAddress(transportCompanyToUpdate.getAddress());
                         log.debug("TransportCompanyService ==> updateById() - end: transportCompanyToUpdate = {}", entity);
-                        return transportCompanyMapper.transportCompanyToResponseDTO(transportCompanyRepository.save(entity));
+                        return transportCompanyRepository.save(entity);
                     })
                     .orElseThrow(() -> new EntityNotFoundException("TransportCompany not found with id = " + id));
         } catch (IllegalArgumentException e) {
@@ -73,16 +84,5 @@ public class TransportCompanyServiceBean implements TransportCompanyService{
         }
     }
 
-    public TransportCompanyResponseDTO getById(Integer id) {
-        log.debug("TransportCompanyService ==> getById() - start: id = {}", id);
-        if (id == null) {
-            throw new WrongArgumentException();
-        }
-        var transportCompany = transportCompanyRepository.findById(id)
-                // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
-                .orElseThrow(ResourceNotFoundException::new);
-        var transportCompanyResponseDTO = transportCompanyMapper.transportCompanyToResponseDTO(transportCompany);
-        log.debug("TransportCompanyService ==> getById() - end: transportCompany = {}", transportCompanyResponseDTO);
-        return transportCompanyResponseDTO;
-    }
+
 }

@@ -1,8 +1,6 @@
 package com.example.travelagency.service.transport;
 
 import com.example.travelagency.domain.Transport;
-import com.example.travelagency.dto.transport.TransportRequestDTO;
-import com.example.travelagency.dto.transport.TransportResponseDTO;
 import com.example.travelagency.repository.TransportRepository;
 import com.example.travelagency.util.exceptionhandling.AccessException;
 import com.example.travelagency.util.exceptionhandling.ResourceNotFoundException;
@@ -21,17 +19,16 @@ import java.util.List;
 @AllArgsConstructor
 public class TransportServiceBean implements TransportService{
 
-    private final TransportMapper transportMapper;
+
     private final TransportRepository transportRepository;
 
-    public TransportResponseDTO create(TransportRequestDTO transportRequestDTO) {
+    public Transport create(Transport transportRequestDTO) {
         log.debug("TransportService ==> create() - start: transport = {}", transportRequestDTO);
         var transportCreated =
                 transportRepository.save(
-                        transportMapper.requestDTOToTransport(transportRequestDTO));
-        var transportResponseDTO = transportMapper.transportToResponseDTO(transportCreated);
-        log.debug("TransportService ==> create() - end: transportResponse = {}", transportResponseDTO);
-        return transportResponseDTO;
+                        transportRequestDTO);
+        log.debug("TransportService ==> create() - end: transportResponse = {}", transportCreated);
+        return transportCreated;
     }
 
     public List<Transport> getAll() {
@@ -54,10 +51,9 @@ public class TransportServiceBean implements TransportService{
     }
 
 
-    public TransportResponseDTO updateById(Integer id, TransportRequestDTO transportRequestDTO) {
+    public Transport updateById(Integer id, Transport transportToUpdate) {
         log.debug("TransportService ==> updateById() - start: id = {}, transportRequest = {}",
-                id, transportRequestDTO);
-        var transportToUpdate = transportMapper.requestDTOToTransport(transportRequestDTO);
+                id, transportToUpdate);
         try {
             return transportRepository.findById(id)
                     .map(entity -> {
@@ -65,7 +61,7 @@ public class TransportServiceBean implements TransportService{
                         entity.setUnitsNumber(transportToUpdate.getUnitsNumber());
                         entity.setSeatsNumber(transportToUpdate.getSeatsNumber());
                         log.debug("TransportService ==> updateById() - end: transportToUpdate = {}", entity);
-                        return transportMapper.transportToResponseDTO(transportRepository.save(entity));
+                        return transportRepository.save(entity);
                     })
                     .orElseThrow(() -> new EntityNotFoundException("Transport not found with id = " + id));
         } catch (IllegalArgumentException e) {
@@ -75,7 +71,7 @@ public class TransportServiceBean implements TransportService{
         }
     }
 
-    public TransportResponseDTO getById(Integer id) {
+    public Transport getById(Integer id) {
         log.debug("TransportService ==> getById() - start: id = {}", id);
         if (id == null) {
             throw new WrongArgumentException();
@@ -83,8 +79,7 @@ public class TransportServiceBean implements TransportService{
         var transport = transportRepository.findById(id)
                 // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
                 .orElseThrow(ResourceNotFoundException::new);
-        var transportResponseDTO = transportMapper.transportToResponseDTO(transport);
-        log.debug("TransportService ==> getById() - end: transport = {}", transportResponseDTO);
-        return transportResponseDTO;
+        log.debug("TransportService ==> getById() - end: transport = {}", transport);
+        return transport;
     }
 }

@@ -30,12 +30,15 @@ public class CustomerControllerBean implements CustomerController {
 
     @Override
     public void updateCustomer(Integer id, CustomerRequestDTO customerRequestDto) {
-        customerService.updateById(id, customerRequestDto);
+        var customerToUpdate=customerMapper.customerDTOToCustomer(customerRequestDto);
+        customerService.updateById(id, customerToUpdate);
     }
 
     @Override
     public CustomerResponseDTO getCustomer(Integer id) {
-        return customerService.getById(id);
+        return customerMapper
+                .customerToCustomerResponseDTO(
+                        customerService.getById(id));
     }
 
     @Override

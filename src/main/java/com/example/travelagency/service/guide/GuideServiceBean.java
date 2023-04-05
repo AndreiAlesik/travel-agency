@@ -1,10 +1,6 @@
 package com.example.travelagency.service.guide;
 
 import com.example.travelagency.domain.Guide;
-import com.example.travelagency.dto.attraction.AttractionRequestDTO;
-import com.example.travelagency.dto.attraction.AttractionResponseDTO;
-import com.example.travelagency.dto.guide.GuideRequestDTO;
-import com.example.travelagency.dto.guide.GuideResponseDTO;
 import com.example.travelagency.repository.GuideRepository;
 import com.example.travelagency.util.exceptionhandling.AccessException;
 import com.example.travelagency.util.exceptionhandling.ResourceNotFoundException;
@@ -23,17 +19,16 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 public class GuideServiceBean implements GuideService{
-    private final GuideMapper guideMapper;
+
     private final GuideRepository guideRepository;
 
-    public GuideResponseDTO create(GuideRequestDTO guideRequestDTO) {
-        log.debug("GuideService ==> create() - start: guide = {}", guideRequestDTO);
+    public Guide create(Guide guide) {
+        log.debug("GuideService ==> create() - start: guide = {}", guide);
         var guideCreated =
                 guideRepository.save(
-                        guideMapper.requestDTOToGuide(guideRequestDTO));
-        var guideResponseDTO = guideMapper.guideToResponseDTO(guideCreated);
-        log.debug("GuideService ==> create() - end: guideResponse = {}", guideResponseDTO);
-        return guideResponseDTO;
+                        guide);
+        log.debug("GuideService ==> create() - end: guideResponse = {}", guideCreated);
+        return guideCreated;
     }
 
     public List<Guide> getAll() {
@@ -56,10 +51,9 @@ public class GuideServiceBean implements GuideService{
     }
 
 
-    public GuideResponseDTO updateById(Integer id, GuideRequestDTO guideRequestDTO) {
+    public Guide updateById(Integer id, Guide guideToUpdate) {
         log.debug("GuideService ==> updateById() - start: id = {}, guideRequest = {}",
-                id, guideRequestDTO);
-        var guideToUpdate = guideMapper.requestDTOToGuide(guideRequestDTO);
+                id, guideToUpdate);
         try {
             return guideRepository.findById(id)
                     .map(entity -> {
@@ -68,7 +62,7 @@ public class GuideServiceBean implements GuideService{
                         entity.setPhoneNumber(guideToUpdate.getPhoneNumber());
                         entity.setAddress(guideToUpdate.getAddress());
                         log.debug("GuideService ==> updateById() - end: accommodationToUpdate = {}", entity);
-                        return guideMapper.guideToResponseDTO(guideRepository.save(entity));
+                        return guideRepository.save(entity);
                     })
                     .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
         } catch (IllegalArgumentException e) {
@@ -78,7 +72,7 @@ public class GuideServiceBean implements GuideService{
         }
     }
 
-    public GuideResponseDTO getById(Integer id) {
+    public Guide getById(Integer id) {
         log.debug("GuideService ==> getById() - start: id = {}", id);
         if (id == null) {
             throw new WrongArgumentException();
@@ -86,8 +80,7 @@ public class GuideServiceBean implements GuideService{
         var guide = guideRepository.findById(id)
                 // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
                 .orElseThrow(ResourceNotFoundException::new);
-        var guideResponseDTO = guideMapper.guideToResponseDTO(guide);
-        log.debug("GuideService ==> getById() - end: guide = {}", guideResponseDTO);
-        return guideResponseDTO;
+        log.debug("GuideService ==> getById() - end: guide = {}", guide);
+        return guide;
     }
 }

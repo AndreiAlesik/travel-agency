@@ -1,13 +1,11 @@
 package com.example.travelagency.service.attraction;
 
 import com.example.travelagency.domain.Attraction;
-import com.example.travelagency.dto.attraction.AttractionRequestDTO;
-import com.example.travelagency.dto.attraction.AttractionResponseDTO;
 import com.example.travelagency.repository.AttractionRepository;
 import com.example.travelagency.util.exceptionhandling.AccessException;
 import com.example.travelagency.util.exceptionhandling.ResourceNotFoundException;
 import com.example.travelagency.util.exceptionhandling.WrongArgumentException;
-import com.example.travelagency.util.mapstruct.AttractionMapper;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,17 +22,15 @@ public class AttractionsServiceBean implements AttractionService{
 
 
     private final AttractionRepository attractionRepository;
-    private final AttractionMapper attractionMapper;
 
 
-    public AttractionResponseDTO create(AttractionRequestDTO attractionRequestDTO) {
-        log.debug("AttractionsService ==> create() - start: attractionRequestDTO = {}", attractionRequestDTO);
+    public Attraction create(Attraction attraction) {
+        log.debug("AttractionsService ==> create() - start: attraction = {}", attraction);
         var attractionCreated =
                 attractionRepository.save(
-                        attractionMapper.requestDTOToAttraction(attractionRequestDTO));
-        var attractionResponse = attractionMapper.attractionToResponseDTO(attractionCreated);
-        log.debug("AttractionsService ==> create() - end: attractionResponse = {}", attractionResponse);
-        return attractionResponse;
+                        attraction);
+        log.debug("AttractionsService ==> create() - end: attractionCreated = {}", attractionCreated);
+        return attractionCreated;
     }
 
     public List<Attraction> getAll() {
@@ -57,10 +53,9 @@ public class AttractionsServiceBean implements AttractionService{
     }
 
 
-    public AttractionResponseDTO updateById(Integer id, AttractionRequestDTO attractionRequestDTO) {
+    public Attraction updateById(Integer id, Attraction attractionToUpdate) {
         log.debug("AttractionsService ==> updateById() - start: id = {}, attractionRequestDTO = {}",
-                id, attractionRequestDTO);
-        var attractionToUpdate = attractionMapper.requestDTOToAttraction(attractionRequestDTO);
+                id, attractionToUpdate);
         try {
             return attractionRepository.findById(id)
                     .map(entity -> {
@@ -70,7 +65,7 @@ public class AttractionsServiceBean implements AttractionService{
                         entity.setAddress(attractionToUpdate.getAddress());
                         entity.setPrice(attractionToUpdate.getPrice());
                         log.debug("AttractionsService ==> updateById() - end: accommodationToUpdate = {}", entity);
-                        return attractionMapper.attractionToResponseDTO(attractionRepository.save(entity));
+                        return attractionRepository.save(entity);
                     })
                     .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
         } catch (IllegalArgumentException e) {
@@ -80,7 +75,7 @@ public class AttractionsServiceBean implements AttractionService{
         }
     }
 
-    public AttractionResponseDTO getById(Integer id) {
+    public Attraction getById(Integer id) {
         log.debug("AttractionsService ==> getById() - start: id = {}", id);
         if (id == null) {
             throw new WrongArgumentException();
@@ -88,8 +83,7 @@ public class AttractionsServiceBean implements AttractionService{
         var attraction = attractionRepository.findById(id)
                 // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
                 .orElseThrow(ResourceNotFoundException::new);
-        var attractionResponseDTO = attractionMapper.attractionToResponseDTO(attraction);
-        log.debug("AttractionsService ==> getById() - end: employee = {}", attractionResponseDTO);
-        return attractionResponseDTO;
+        log.debug("AttractionsService ==> getById() - end: attraction = {}", attraction);
+        return attraction;
     }
 }

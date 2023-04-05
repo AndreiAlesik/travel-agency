@@ -2,13 +2,11 @@ package com.example.travelagency.service.customer;
 
 
 import com.example.travelagency.domain.Customer;
-import com.example.travelagency.dto.customer.CustomerRequestDTO;
-import com.example.travelagency.dto.customer.CustomerResponseDTO;
 import com.example.travelagency.repository.CustomerRepository;
 import com.example.travelagency.util.exceptionhandling.AccessException;
 import com.example.travelagency.util.exceptionhandling.ResourceNotFoundException;
 import com.example.travelagency.util.exceptionhandling.WrongArgumentException;
-import com.example.travelagency.util.mapstruct.CustomerMapper;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,17 +20,14 @@ import java.util.List;
 @AllArgsConstructor
 public class CustomersServiceBean implements CustomerService{
 
-
     private final CustomerRepository customerRepository;
-    private final CustomerMapper customerMapper;
-    public CustomerResponseDTO create(CustomerRequestDTO customerRequestDTO) {
-        log.debug("CustomersService ==> create() - start: customerRequestDTO = {}", customerRequestDTO);
+
+    public Customer create(Customer customer) {
+        log.debug("CustomersService ==> create() - start: customer = {}", customer);
         var customerCreated =
-                customerRepository.save(
-                        customerMapper.customerDTOToCustomer(customerRequestDTO));
-        var attractionResponse = customerMapper.customerToCustomerResponseDTO(customerCreated);
-        log.debug("CustomersService ==> create() - end: attractionResponse = {}", attractionResponse);
-        return attractionResponse;
+                customerRepository.save(customer);
+        log.debug("CustomersService ==> create() - end: attractionResponse = {}", customerCreated);
+        return customerCreated;
     }
 
     public List<Customer> getAll() {
@@ -55,10 +50,9 @@ public class CustomersServiceBean implements CustomerService{
     }
 
 
-    public CustomerResponseDTO updateById(Integer id, CustomerRequestDTO customerRequestDTO) {
+    public Customer updateById(Integer id, Customer customerToUpdate) {
         log.debug("CustomersService ==> updateById() - start: id = {}, attractionRequestDTO = {}",
-                id, customerRequestDTO);
-        var customerToUpdate = customerMapper.customerDTOToCustomer(customerRequestDTO);
+                id, customerToUpdate);
         try {
             return customerRepository.findById(id)
                     .map(entity -> {
@@ -68,7 +62,7 @@ public class CustomersServiceBean implements CustomerService{
                         entity.setPhoneNumber(customerToUpdate.getPhoneNumber());
                         entity.setDateOfBirth(customerToUpdate.getDateOfBirth());
                         log.debug("CustomersService ==> updateById() - end: accommodationToUpdate = {}", entity);
-                        return customerMapper.customerToCustomerResponseDTO(customerRepository.save(entity));
+                        return customerRepository.save(entity);
                     })
                     .orElseThrow(() -> new EntityNotFoundException("Customer not found with id = " + id));
         } catch (IllegalArgumentException e) {
@@ -78,7 +72,7 @@ public class CustomersServiceBean implements CustomerService{
         }
     }
 
-    public CustomerResponseDTO getById(Integer id) {
+    public Customer getById(Integer id) {
         log.debug("CustomersService ==> getById() - start: id = {}", id);
         if (id == null) {
             throw new WrongArgumentException();
@@ -86,8 +80,7 @@ public class CustomersServiceBean implements CustomerService{
         var customer = customerRepository.findById(id)
                 // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
                 .orElseThrow(ResourceNotFoundException::new);
-        var customerResponseDTO = customerMapper.customerToCustomerResponseDTO(customer);
-        log.debug("CustomersService ==> getById() - end: customer = {}", customerResponseDTO);
-        return customerResponseDTO;
+        log.debug("CustomersService ==> getById() - end: customer = {}", customer);
+        return customer;
     }
 }

@@ -2,13 +2,10 @@ package com.example.travelagency.service.language;
 
 
 import com.example.travelagency.domain.Language;
-import com.example.travelagency.dto.language.LanguageRequestDTO;
-import com.example.travelagency.dto.language.LanguageResponseDTO;
 import com.example.travelagency.repository.LanguageRepository;
 import com.example.travelagency.util.exceptionhandling.AccessException;
 import com.example.travelagency.util.exceptionhandling.ResourceNotFoundException;
 import com.example.travelagency.util.exceptionhandling.WrongArgumentException;
-import com.example.travelagency.util.mapstruct.LanguageMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,17 +18,17 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 public class LanguageServiceBean implements LanguageService {
-    private final LanguageMapper languageMapper;
+
     private final LanguageRepository languageRepository;
 
-    public LanguageResponseDTO create(LanguageRequestDTO languageRequestDTO) {
-        log.debug("LanguageService ==> create() - start: language = {}", languageRequestDTO);
+    public Language create(Language language) {
+        log.debug("LanguageService ==> create() - start: language = {}", language);
         var languageCreated =
                 languageRepository.save(
-                        languageMapper.requestDTOToLanguage(languageRequestDTO));
-        var languageResponseDTO = languageMapper.languageToResponseDTO(languageCreated);
-        log.debug("LanguageService ==> create() - end: languageResponse = {}", languageResponseDTO);
-        return languageResponseDTO;
+                        language);
+
+        log.debug("LanguageService ==> create() - end: languageCreated = {}", languageCreated);
+        return languageCreated;
     }
 
     public List<Language> getAll() {
@@ -54,17 +51,16 @@ public class LanguageServiceBean implements LanguageService {
     }
 
 
-    public LanguageResponseDTO updateById(Integer id, LanguageRequestDTO languageRequestDTO) {
+    public Language updateById(Integer id, Language languageToUpdate) {
         log.debug("LanguageService ==> updateById() - start: id = {}, languageRequest = {}",
-                id, languageRequestDTO);
-        var languageToUpdate = languageMapper.requestDTOToLanguage(languageRequestDTO);
+                id, languageToUpdate);
         try {
             return languageRepository.findById(id)
                     .map(entity -> {
                         entity.setName(languageToUpdate.getName());
                         entity.setCode(languageToUpdate.getCode());
                         log.debug("LanguageService ==> updateById() - end: languageToUpdate = {}", entity);
-                        return languageMapper.languageToResponseDTO(languageRepository.save(entity));
+                        return languageRepository.save(entity);
                     })
                     .orElseThrow(() -> new EntityNotFoundException("Language not found with id = " + id));
         } catch (IllegalArgumentException e) {
@@ -74,7 +70,7 @@ public class LanguageServiceBean implements LanguageService {
         }
     }
 
-    public LanguageResponseDTO getById(Integer id) {
+    public Language getById(Integer id) {
         log.debug("LanguageService ==> getById() - start: id = {}", id);
         if (id == null) {
             throw new WrongArgumentException();
@@ -82,8 +78,7 @@ public class LanguageServiceBean implements LanguageService {
         var language = languageRepository.findById(id)
                 // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
                 .orElseThrow(ResourceNotFoundException::new);
-        var languageResponseDTO = languageMapper.languageToResponseDTO(language);
-        log.debug("LanguageService ==> getById() - end: guide = {}", languageResponseDTO);
-        return languageResponseDTO;
+        log.debug("LanguageService ==> getById() - end: guide = {}", language);
+        return language;
     }
 }
