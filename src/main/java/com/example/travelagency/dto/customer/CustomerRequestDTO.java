@@ -1,12 +1,10 @@
 package com.example.travelagency.dto.customer;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Date;
 
@@ -14,6 +12,7 @@ import java.sql.Date;
 @Setter
 @Builder
 @AllArgsConstructor
+@ToString
 public class CustomerRequestDTO {
 
     @Valid
@@ -21,6 +20,9 @@ public class CustomerRequestDTO {
     @Schema(description = "Name of an customer.", example = "Billy", required = true)
     private String name;
 
+
+    @Schema(description = "Personal number of an customer.", example = "1234556", required = true)
+    private String personalNumber;
     @Schema(description = "Surname of an customer.", example = "Smith", required = true)
     private String surname;
 

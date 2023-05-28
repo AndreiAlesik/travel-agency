@@ -7,6 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@ToString
 @AllArgsConstructor
 public class LanguageRequestDTO {
     @Schema(description = "code of a language.", example = "en", required = true)

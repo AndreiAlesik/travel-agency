@@ -1,12 +1,13 @@
 package com.example.travelagency.service.language;
 
 import com.example.travelagency.domain.Language;
+import com.example.travelagency.dto.ResponseObject;
 
 
 import java.util.List;
 
 public interface LanguageService {
-    Language create(Language language);
+    ResponseObject create(Language language);
 
     List<Language> getAll();
 

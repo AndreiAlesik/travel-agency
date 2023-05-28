@@ -3,6 +3,9 @@ package com.example.travelagency.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,13 +39,12 @@ public class Customer {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    @Column(name = "date_of_birth", nullable = false)
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
 
-    @Column(name = "is_deleted")
-    private Boolean deleted;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "customers")
     @JsonIgnore
     private Set<Travel> travels=new HashSet<>();

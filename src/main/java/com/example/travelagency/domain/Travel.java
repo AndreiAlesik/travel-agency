@@ -2,6 +2,8 @@ package com.example.travelagency.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.OffsetDateTime;
 import java.util.HashSet;
@@ -41,18 +43,22 @@ public class Travel {
     @ToString.Exclude
     private Set<Accommodation> accommodations=new HashSet<>();
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @ToString.Exclude
     private Set<Stage> stages=new HashSet<>();
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @ToString.Exclude
     private Set<Customer> customers=new HashSet<>();
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @ToString.Exclude
     private Set<Attraction> attractions=new HashSet<>();
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @ToString.Exclude
     private Set<Employee> employees=new HashSet<>();

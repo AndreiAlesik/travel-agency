@@ -3,10 +3,7 @@ package com.example.travelagency.dto.customer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Date;
 
@@ -14,6 +11,7 @@ import java.sql.Date;
 @Setter
 @Builder
 @AllArgsConstructor
+@ToString
 public class CustomerResponseDTO {
     @Valid
     @NotNull

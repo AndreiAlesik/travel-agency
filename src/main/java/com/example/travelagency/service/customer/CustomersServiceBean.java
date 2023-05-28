@@ -2,6 +2,7 @@ package com.example.travelagency.service.customer;
 
 
 import com.example.travelagency.domain.Customer;
+import com.example.travelagency.dto.ResponseObject;
 import com.example.travelagency.repository.CustomerRepository;
 import com.example.travelagency.util.exceptionhandling.AccessException;
 import com.example.travelagency.util.exceptionhandling.ResourceNotFoundException;
@@ -11,6 +12,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,16 +20,21 @@ import java.util.List;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class CustomersServiceBean implements CustomerService{
+public class CustomersServiceBean implements CustomerService {
 
     private final CustomerRepository customerRepository;
 
-    public Customer create(Customer customer) {
+    public ResponseObject<String> create(Customer customer) {
         log.debug("CustomersService ==> create() - start: customer = {}", customer);
-        var customerCreated =
-                customerRepository.save(customer);
-        log.debug("CustomersService ==> create() - end: attractionResponse = {}", customerCreated);
-        return customerCreated;
+        String pesel = customer.getPersonalNumber();
+        Customer existingCustomer = customerRepository.findByPersonalNumber(pesel);
+        if (existingCustomer != null) {
+            return new ResponseObject<>(HttpStatus.BAD_REQUEST, "Klient already exist", null);
+        }
+        Customer customerCreated = customerRepository.save(customer);
+        log.debug("CustomersService ==> create() - end: customerCreated = {}", customerCreated);
+
+        return new ResponseObject<>(HttpStatus.OK, "OK", null);
     }
 
     public List<Customer> getAll() {
@@ -50,21 +57,19 @@ public class CustomersServiceBean implements CustomerService{
     }
 
 
-    public Customer updateById(Integer id, Customer customerToUpdate) {
+    public ResponseObject<?> updateById(String id, Customer customerToUpdate) {
         log.debug("CustomersService ==> updateById() - start: id = {}, attractionRequestDTO = {}",
                 id, customerToUpdate);
+        var customer = customerRepository.findByPersonalNumber(id);
         try {
-            return customerRepository.findById(id)
-                    .map(entity -> {
-                        entity.setName(customerToUpdate.getName());
-                        entity.setSurname(customerToUpdate.getSurname());
-                        entity.setAddress(customerToUpdate.getAddress());
-                        entity.setPhoneNumber(customerToUpdate.getPhoneNumber());
-                        entity.setDateOfBirth(customerToUpdate.getDateOfBirth());
-                        log.debug("CustomersService ==> updateById() - end: accommodationToUpdate = {}", entity);
-                        return customerRepository.save(entity);
-                    })
-                    .orElseThrow(() -> new EntityNotFoundException("Customer not found with id = " + id));
+            customer.setName(customerToUpdate.getName());
+            customer.setSurname(customerToUpdate.getSurname());
+            customer.setAddress(customerToUpdate.getAddress());
+            customer.setPhoneNumber(customerToUpdate.getPhoneNumber());
+            customer.setDateOfBirth(customerToUpdate.getDateOfBirth());
+            log.debug("CustomersService ==> updateById() - end: accommodationToUpdate = {}", customer);
+            customerRepository.save(customer);
+            return new ResponseObject<>(HttpStatus.OK, "OK", null);
         } catch (IllegalArgumentException e) {
             throw new WrongArgumentException();
         } catch (DataAccessException e) {
@@ -72,15 +77,22 @@ public class CustomersServiceBean implements CustomerService{
         }
     }
 
-    public Customer getById(Integer id) {
+    public ResponseObject<Customer> getById(String id) {
         log.debug("CustomersService ==> getById() - start: id = {}", id);
         if (id == null) {
             throw new WrongArgumentException();
         }
-        var customer = customerRepository.findById(id)
-                // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
-                .orElseThrow(ResourceNotFoundException::new);
-        log.debug("CustomersService ==> getById() - end: customer = {}", customer);
-        return customer;
+        var customer = customerRepository.findByPersonalNumber(id);
+        // .orElseThrow(() -> new EntityNotFoundException("Employee not found with id = " + id));
+        var response = new ResponseObject<>(HttpStatus.OK, "OK", customer);
+        log.debug("CustomersService ==> getById() - end: response = {}", response);
+        return response;
+    }
+
+    @Override
+    public ResponseObject<?> removeByPersonalNumber(String personalNumber) {
+        var customer=customerRepository.findByPersonalNumber(personalNumber);
+        customerRepository.delete(customer);
+        return new ResponseObject<>(HttpStatus.OK, "OK", null);
     }
 }

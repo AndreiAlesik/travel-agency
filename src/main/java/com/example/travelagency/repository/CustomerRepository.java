@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Integer>, JpaSpecificationExecutor<Customer> {
-    List<Customer> findAllByDeletedIsFalse();
-    Customer getCustomerByIdAndDeletedIsFalse(Integer id);
+    Customer findByPersonalNumber(String pesel);
+    void removeByPersonalNumber(String pesel);
 }

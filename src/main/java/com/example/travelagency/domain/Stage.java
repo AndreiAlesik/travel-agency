@@ -3,6 +3,8 @@ package com.example.travelagency.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.OffsetDateTime;
 import java.util.HashSet;
@@ -37,10 +39,12 @@ public class Stage {
     @Column(name = "end_date", nullable = false)
     private OffsetDateTime endDate;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "stage_id")
     private Set<Transport> transports = new HashSet<>();
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "stages")
     @JsonIgnore
     private Set<Travel> travels=new HashSet<>();

@@ -2,6 +2,7 @@ package com.example.travelagency.service.language;
 
 
 import com.example.travelagency.domain.Language;
+import com.example.travelagency.dto.ResponseObject;
 import com.example.travelagency.repository.LanguageRepository;
 import com.example.travelagency.util.exceptionhandling.AccessException;
 import com.example.travelagency.util.exceptionhandling.ResourceNotFoundException;
@@ -10,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,14 +23,19 @@ public class LanguageServiceBean implements LanguageService {
 
     private final LanguageRepository languageRepository;
 
-    public Language create(Language language) {
+    public ResponseObject create(Language language) {
         log.debug("LanguageService ==> create() - start: language = {}", language);
-        var languageCreated =
-                languageRepository.save(
-                        language);
+
+        // Check if language code already exists
+        if (languageRepository.existsByCode(language.getCode())) {
+            return new ResponseObject(HttpStatus.BAD_REQUEST, "Language code already exists", null);
+        }
+
+        var languageCreated = languageRepository.save(language);
 
         log.debug("LanguageService ==> create() - end: languageCreated = {}", languageCreated);
-        return languageCreated;
+
+        return new ResponseObject(HttpStatus.CREATED, "Language created successfully", languageCreated);
     }
 
     public List<Language> getAll() {

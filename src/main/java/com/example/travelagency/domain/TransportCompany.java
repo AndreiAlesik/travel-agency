@@ -2,6 +2,8 @@ package com.example.travelagency.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +33,7 @@ public class TransportCompany {
     @Column(name = "address", nullable = false)
     private String address;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @ToString.Exclude
     private Set<Transport> transports = new HashSet<>();

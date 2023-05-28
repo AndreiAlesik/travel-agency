@@ -3,6 +3,8 @@ package com.example.travelagency.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -34,10 +36,12 @@ public class Guide {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "guides")
     @JsonIgnore
     private Set<Attraction> attractions=new HashSet<>();
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "guides")
     @JsonIgnore
     private Set<Language> languages=new HashSet<>();
